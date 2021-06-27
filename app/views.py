@@ -237,7 +237,7 @@ class CustomerRegistrationView(View):
         if form.is_valid():
             messages.success(request,"Congratulation!! Registered Sucessfully")
             form.save()
-        return render(request, 'app/customerregistration.html',{'form':form})
+        return redirect('login')
 
 @login_required
 def checkout(request):
