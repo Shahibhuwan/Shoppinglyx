@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Search{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+ <div class="row">
+ 
+  <div class="col-sm-9 offset-sm-1">
+  {% for result in allresults %}
+   <div class="row shadow-sm mb-3">
+
+    <div class="col-sm-2">
+    <img src="{{result.product_image.url}}" alt="" srcset="" class="img-fluid" height="150" width ="150">
+        </div>
+        <div class="col-sm-7">
+        <p>Product : {{result.title}}</p>
+        <p>Quantity : {{result.description}}</p>
+        <p>Price : {{result.discounted_price}}</p>
+        </div>
+        
+ </div>
+ {% endfor %}
+ </div> <!--2nd col closed-->
+ </div> <!--row closed-->
+</div>
+
+
+
+{% endblock main-content %}

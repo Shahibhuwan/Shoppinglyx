@@ -1,0 +1,158 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Bill{% endblock title %}
+{% block main-content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="row p-5">
+                        <div class="col-md-6">
+                            <img src="http://via.placeholder.com/400x90?text=logo">
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-1">Invoice #550</p>
+                            <p class="text-muted">{{ bill.date }}</p>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="row pb-5 p-5">
+                        <div class="col-md-6">
+                            <p class="font-weight-bold mb-4">Client Information</p>
+                            <p class="mb-1">{{bill.name}}</p>
+                            <p>ShoppinglyX</p>
+                            <p class="mb-1">Kathmandu, Nepal</p>
+                            <p class="mb-1">6781 45P</p>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-4">Payment Details</p>
+                            <p class="mb-1"><span class="text-muted">VAT: </span> 1425782</p>
+                            <p class="mb-1"><span class="text-muted">VAT ID: </span> 10253642</p>
+                            <p class="mb-1"><span class="text-muted">Payment Type: </span> Root</p>
+                            <p class="mb-1"><span class="text-muted">Name: </span> {{bill.name}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row p-5">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0 text-uppercase small font-weight-bold">ID</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Item</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Description</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Quantity</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Unit Cost</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for c in cart_product %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ c.product.title}}</td>
+                                        <td>{{ c.product.description }}</td>
+                                        <td>{{ c.quantity}}</td>
+                                        <td>{{ c.total_cost }}</td>
+                                        <td>{{ totalamount }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row-reverse bg-dark text-white p-4">
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Grand Total</div>
+                            <div class="h2 font-weight-light">{{ totalamount }}</div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Discount</div>
+                            <div class="h2 font-weight-light">10%</div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Sub - Total amount</div>
+                            <div class="h2 font-weight-light">{{totalamount}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-light mt-5 mb-5 text-center small">by : <a class="text-light" target="_blank" href="http://totoprayogo.com">totoprayogo.com</a></div>
+<button id="payment-button" class="btn btn-warning mt-3 px-5 fw-bold">Pay with Khalti</button>
+    <button class="btn btn-warning mt-3 px-5 fw-bold"><a href="/">Go to Home page</a><button>
+
+</div>
+{% endblock main-content %}
+
+{% block payment-gateway %}
+    
+
+  ...
+    <!-- Place this where you need payment button -->
+
+    <!-- Place this where you need payment button -->
+    <!-- Paste this code anywhere in you body tag -->
+    <script>
+    function verifyPayment(payload){
+        $.ajax({
+            url : "{% url 'verify_payment' %}" ,
+            type: "POST",
+            data : payload,
+            dataType : "json",
+            success : function (response){alert(response)},
+            error : function (error) { alert(error.responseJSON['message'])}
+
+        });
+    }
+
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "test_public_key_e9ee8fdade33479bba41f00d0847afcc",
+            "productIdentity": "order_{{order.id}}",
+            "productName": "title_{{order.product.title}}",
+            "productUrl": "http://127.0.0.1:8000/",
+            "paymentPreference": [
+                "KHALTI",
+                "EBANKING",
+                "MOBILE_BANKING",
+                "CONNECT_IPS",
+                "SCT",
+                ],
+            "eventHandler": {
+                onSuccess (payload) {
+                    // hit merchant api for initiating verfication
+                    console.log(payload);
+                    verifyPayment(payload)
+                   
+
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: {{totalamount}}*100});
+        }
+    </script>
+    <!-- Paste this code anywhere in you body tag -->
+{% endblock payment-gateway %}
