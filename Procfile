@@ -1,1 +1,1 @@
-web: gunicorn shoppinglyx.wsgi --log-file -
+web: gunicorn --port=$PORT shoppinglyx.wsgi:application
