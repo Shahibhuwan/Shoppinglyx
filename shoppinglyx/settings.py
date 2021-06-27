@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n)f6i1d&-$%j5dk$n8&8ju9y%$n-9$zv5tn+d^!$p*h6pj&p8('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['https://shoppinglyxecom.herokuapp.com/','http://127.0.0.1:8000/','shoppinglyxecom.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -126,7 +126,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'
-LOGIN_REDIRECT_URL ='/profile/'
+LOGIN_REDIRECT_URL ='/'
 EMAIL_BACKEND ='django.core.mail.backends.console.EmailBackend'
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 #backend ma static ra media file basne folder and location from base directory
